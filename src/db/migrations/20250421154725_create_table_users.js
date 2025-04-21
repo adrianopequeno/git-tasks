@@ -1,8 +1,11 @@
+export function up(knex) {
+  return knex.schema.createTable("users", (table) => {
+    table.increments("id").primary();
+    table.string("login").notNull().unique();
+    table.string("avatar_url").notNull();
+  });
+}
 
-exports.up = function(knex) {
-  
-};
-
-exports.down = function(knex) {
-  
-};
+export function down(knex) {
+  return knex.schema.dropTable("users");
+}
