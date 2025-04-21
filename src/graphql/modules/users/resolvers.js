@@ -1,4 +1,9 @@
 export const resolvers = {
+  User: {
+    async tasks(user, _, { dataSources }) {
+      return await dataSources.tasksService.getTasks(user.id);
+    },
+  },
   Query: {
     async user(_, { login }, { dataSources }) {
       const userFound = await dataSources.userRegisterService.getUserByLogin(
