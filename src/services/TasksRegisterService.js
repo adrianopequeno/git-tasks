@@ -1,5 +1,8 @@
 import db from "../db/index.js";
 
+import { TaskNotFoundError } from "../errors/TaskNotFoundError/index.js";
+import { NoPermissionError } from "../errors/NoPermissionError/index.js";
+
 class TasksRegisterService {
   constructor(service) {
     this.service = service;
@@ -12,10 +15,10 @@ class TasksRegisterService {
   async getTaskById(user_id, id) {
     const task = await this.service("tasks").where({ id }).first();
 
-    if (!task) throw new Error("Tarefa não encontrada");
+    if (!task) throw new TaskNotFoundError("Tarefa não encontrada");
 
     if (task.user_id != user_id) {
-      throw new Error("Você não tem permissão!");
+      throw new NoPermissionError("Você não tem permissão!");
     }
 
     return task;
