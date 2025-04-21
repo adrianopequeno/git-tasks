@@ -1,3 +1,5 @@
+import { generator } from "../../../helpers/gerenator.js";
+
 export const resolvers = {
   User: {
     async tasks(user, _, { dataSources }) {
@@ -10,15 +12,22 @@ export const resolvers = {
         login
       );
 
-      if (userFound) return userFound;
+      if (userFound) {
+        userFound.token = generator.createToken(userFound.id);
+        return userFound;
+      }
 
       const { login: loginGit, avatar_url } =
         await dataSources.gitHubService.getUser(login);
 
-      return await dataSources.userRegisterService.addUser({
+      const newUser = dataSources.userRegisterService.addUser({
         login: loginGit,
         avatar_url,
       });
+
+      newUser.token = generator.createToken(newUser.id);
+
+      return newUser;
     },
   },
 };
